@@ -1,18 +1,43 @@
+<%@page import="java.sql.SQLException"%>
+<%@page import="java.sql.PreparedStatement"%>
 <%@page import="common.Connector"%>
 <%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-//String num = request.getParameter("num");
-String title = request.getParameter("TITLE");
-String content  = request.getParameter("TEXT");
-String user = request.getParameter("user");
-Connection conn = Connector.getConnection();
-String sql = "insert into user(name,id) ";
-sql +="values(?,?)";
-PreparedStatement ps = conn.prepareStatement(sql);
-//ps.setInt(1, Integer.parseInt(num)); //1번째에 num을 대입하겠다, num의 타입이 String이니 인트값으로 변환해줘야함
-ps.setString(1, name); //2번째에 name을 대입하겠다
-ps.setString(2, id); //3번째에 id을 대입하겠다
+String title = request.getParameter("title");
+String content = request.getParameter("content");
+String creusr = request.getParameter("creusr");
+
+
+String sql = "INSERT INTO board\r\n"+
+"(title, content, credat, cretim, creusr)\r\n"+
+"VALUES(\r\n"+
+"?,\r\n"+
+"?,\r\n"+
+"DATE_FORMAT(NOW(),'%Y%m%d'),\r\n"+
+"DATE_FORMAT(now(),'%H%i%s'),\r\n"+
+"?\r\n"+
+")";
+Connection con = null;
+try{
+con = Connector.getConnection();
+PreparedStatement ps = con.prepareStatement(sql);
+ps.setString(1,title);
+ps.setString(2,content);
+ps.setString(3,creusr);
 int result = ps.executeUpdate();
+	if(result==1){
+		
+	}
+	
+	
+}catch(SQLException e){
+	out.println("에러남");
+}finally{
+	Connector.close();
+}
 %>
+<script>
+location.href="/board/list.jsp"
+</script>
